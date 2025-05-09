@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Stopwatch - ProDigy Infotech Task-02</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: linear-gradient(to right, #e0f7fa, #e1bee7);
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    #display {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: #222;
+      background: #fff;
+      padding: 10px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .controls button {
+      padding: 12px 24px;
+      margin: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s ease, background-color 0.3s ease;
+      color: white;
+    }
+
+    .controls button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .controls button:active {
+      transform: scale(0.95);
+    }
+
+    .start { background-color: #28a745; }       /* Green */
+    .pause { background-color: #fd7e14; }       /* Orange */
+    .reset { background-color: #dc3545; }       /* Red */
+    .lap { background-color: #007bff; }         /* Blue */
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin-top: 20px;
+      width: 250px;
+    }
+
+    li {
+      background: #ffffffdd;
+      margin: 6px 0;
+      padding: 10px;
+      border-radius: 6px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Stopwatch</h1>
+  <div id="display">00:00:00</div>
+
+  <div class="controls">
+    <button class="start" onclick="startStopwatch()">Start</button>
+    <button class="pause" onclick="pauseStopwatch()">Pause</button>
+    <button class="reset" onclick="resetStopwatch()">Reset</button>
+    <button class="lap" onclick="recordLap()">Lap</button>
+  </div>
+
+  <ul id="laps"></ul>
+
+  <script>
+    let startTime = 0;
+    let elapsedTime = 0;
+    let timerInterval;
+
+    function updateDisplay() {
+      const time = new Date(elapsedTime);
+      const hours = String(time.getUTCHours()).padStart(2, '0');
+      const minutes = String(time.getUTCMinutes()).padStart(2, '0');
+      const seconds = String(time.getUTCSeconds()).padStart(2, '0');
+      document.getElementById('display').textContent = `${hours}:${minutes}:${seconds}`;
+    }
+
+    function startStopwatch() {
+      if (!timerInterval) {
+        startTime = Date.now() - elapsedTime;
+        timerInterval = setInterval(() => {
+          elapsedTime = Date.now() - startTime;
+          updateDisplay();
+        }, 1000);
+      }
+    }
+
+    function pauseStopwatch() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+
+    function resetStopwatch() {
+      pauseStopwatch();
+      elapsedTime = 0;
+      updateDisplay();
+      document.getElementById('laps').innerHTML = '';
+    }
+
+    function recordLap() {
+      const lapTime = document.getElementById('display').textContent;
+      const lapList = document.getElementById('laps');
+      const newLap = document.createElement('li');
+      newLap.textContent = `Lap: ${lapTime}`;
+      lapList.appendChild(newLap);
+    }
+  </script>
+
+</body>
+</html>
